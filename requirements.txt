@@ -1,0 +1,20 @@
+# Core LLM and AI Framework
+langchain
+langchain-core
+langchain-openai
+langgraph
+openai
+
+# LLM Configuration
+python-dotenv
+
+# Data Processing
+numpy
+pydantic
+
+# Logging and Output Formatting
+colorama
+rich
+
+# Type Hints and Utilities
+typing-extensions
