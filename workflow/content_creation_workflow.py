@@ -21,12 +21,11 @@ class Workflow:
         Initializes the Workflow with the LLM model and instructions.
 
         Args:
-            llm: The language model used for structured output.
+            llm: The StoryLLM instance with Bytez model.
         """
         self.llm = llm
-        self.chapter_writer_llm = llm.with_structured_output(Chapter)  # Augment LLM with Team schema
-        
-        self.chapter_writer_agent = ChapterGenerator(self.chapter_writer_llm)
+        # Create chapter writer agent with Bytez model
+        self.chapter_writer_agent = ChapterGenerator(self.llm.model, self.llm.system_message)
         self.story_saver_agent = StorySaver("story.txt")
 
         # Initialize the workflow state

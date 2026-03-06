@@ -1,9 +1,8 @@
 # Core LLM and AI Framework
 langchain
 langchain-core
-langchain-openai
 langgraph
-openai
+bytez
 
 # LLM Configuration
 python-dotenv

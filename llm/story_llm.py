@@ -1,34 +1,37 @@
 from typing import Optional
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import SystemMessage
+from bytez import Bytez
 import os
 from dotenv import load_dotenv
 from prompts.story_prompt import STORY_SYSTEM_PROMPT
 
 class StoryLLM:
     """
-    Singleton class to manage OpenAI LLM instance
+    Singleton class to manage Bytez LLM instance
     """
     _instance: Optional['StoryLLM'] = None
-    _llm: Optional[ChatOpenAI] = None
-    _system_message: Optional[SystemMessage] = None
+    _sdk: Optional[Bytez] = None
+    _model = None
+    _system_message: Optional[str] = None
     
     def __init__(self):
         if StoryLLM._instance is not None:
             raise Exception("StoryLLM is a singleton! Use StoryLLM.get_instance()")
         
         # Load environment variables
-        load_dotenv('config/.env')
+        load_dotenv()
         
-        # Initialize OpenAI LLM
-        self._llm = ChatOpenAI(
-            model_name="gpt-4",
-            temperature=0.7,
-            api_key=os.getenv('OPENAI_API_KEY')
-        )
+        # Initialize Bytez SDK
+        api_key = os.getenv('BYTEZ_API_KEY')
+        if not api_key:
+            raise ValueError("BYTEZ_API_KEY not found in environment variables")
+        
+        self._sdk = Bytez(api_key)
+        
+        # Initialize Gemini 2.5 Flash model
+        self._model = self._sdk.model("google/gemini-2.5-flash")
         
         # Set system message
-        self._system_message = SystemMessage(content=STORY_SYSTEM_PROMPT)
+        self._system_message = STORY_SYSTEM_PROMPT
     
     @classmethod
     def get_instance(cls) -> 'StoryLLM':
@@ -38,11 +41,11 @@ class StoryLLM:
         return cls._instance
     
     @property
-    def llm(self) -> ChatOpenAI:
-        """Get the LLM instance"""
-        return self._llm
+    def model(self):
+        """Get the model instance"""
+        return self._model
     
     @property
-    def system_message(self) -> SystemMessage:
+    def system_message(self) -> str:
         """Get the system message"""
         return self._system_message

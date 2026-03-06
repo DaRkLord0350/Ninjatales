@@ -5,9 +5,9 @@ from data.story_data import Story
 import sys
 from utils.matrix_ops import eda_task_matrix, ninjaTrainingPath
 from utils.print import print_task_data
-from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from workflow.content_creation_workflow import Workflow
+from llm.story_llm import StoryLLM
 load_dotenv()
 
 def get_story_inputs():
@@ -80,7 +80,8 @@ def main():
         mapped_activities = [task_map[task_idx] for task_idx in daily_activities]
         print(f"Mapped activities: {mapped_activities}")
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+        # Initialize Bytez-based LLM
+        llm = StoryLLM.get_instance()
 
         workflow = Workflow(llm, mapped_activities, story.days)
 
